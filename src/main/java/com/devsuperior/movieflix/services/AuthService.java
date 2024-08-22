@@ -1,6 +1,7 @@
 package com.devsuperior.movieflix.services;
 
 
+import com.devsuperior.movieflix.services.exceptions.ForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +27,13 @@ public class AuthService {
 		}
 		catch (Exception e) {
 			throw new UsernameNotFoundException("Invalid user");
+		}
+	}
+
+	public void validateSelfOrMember(Long userId) {
+		User user = authenticated();
+		if(!user.hasRole("ROLE_MEMBER")) {
+			throw new ForbiddenException("Acesso Negado");
 		}
 	}
 }
